@@ -1,22 +1,25 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { getEntries } = require('./utils.js');
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { getEntries } = require("./utils.js");
 
-const entries = getEntries('./src/pages/', 'js');
+const entries = getEntries("./src/pages/", "js");
 
 const config = {
-  entry: Object.assign(entries, { app: './src/app.js' }),
+  entry: Object.assign(entries, {
+    app: "./src/app.js",
+    vendors: "./src/vendors.js",
+  }),
   output: {
     pathinfo: false,
-    path: path.resolve(__dirname, '../dist'),
-    filename: 'js/[name].[hash:8].js',
-    chunkFilename: 'js/[name].chunk.[chunkhash:8].js',
-    publicPath: '/',
+    path: path.resolve(__dirname, "../dist"),
+    filename: "js/[name].[hash:8].js",
+    chunkFilename: "js/[name].chunk.[chunkhash:8].js",
+    publicPath: "/",
   },
   resolve: {
     alias: {
-      src: path.resolve(__dirname, '../src'),
-      components: path.resolve(__dirname, '../src/components'),
+      src: path.resolve(__dirname, "../src"),
+      components: path.resolve(__dirname, "../src/components"),
     },
   },
   module: {
@@ -24,13 +27,13 @@ const config = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: ['babel-loader'],
+        use: ["babel-loader"],
       },
       {
         test: /\.html$/,
         use: [
           {
-            loader: 'html-loader',
+            loader: "html-loader",
             options: {
               minimize: true,
             },
@@ -41,10 +44,10 @@ const config = {
         test: /\.(png|jpg|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         use: [
           {
-            loader: 'url-loader',
+            loader: "url-loader",
             options: {
               limit: 10000,
-              name: 'images/[name].[md5:hash:hex:8].[ext]',
+              name: "images/[name].[md5:hash:hex:8].[ext]",
             },
           },
         ],
@@ -53,10 +56,10 @@ const config = {
         test: /\.(woff|woff2|otf|ttf|eot)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         use: [
           {
-            loader: 'url-loader',
+            loader: "url-loader",
             options: {
               limit: 10000,
-              name: 'fonts/[name].[md5:hash:hex:8].[ext]',
+              name: "fonts/[name].[md5:hash:hex:8].[ext]",
             },
           },
         ],
@@ -65,9 +68,9 @@ const config = {
         test: /\.(mp4|ogg|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
         use: [
           {
-            loader: 'file-loader',
+            loader: "file-loader",
             options: {
-              name: 'assets/[name].[md5:hash:hex:8].[ext]',
+              name: "assets/[name].[md5:hash:hex:8].[ext]",
             },
           },
         ],
@@ -77,16 +80,16 @@ const config = {
   parallelism: 8,
   optimization: {
     splitChunks: {
-      chunks: 'all',
+      chunks: "all",
       cacheGroups: {
         commons: {
-          name: 'commons',
-          chunks: 'initial',
+          name: "commons",
+          chunks: "initial",
           minChunks: 2,
         },
         vendors: {
-          chunks: 'initial',
-          name: 'vendors',
+          chunks: "initial",
+          name: "vendors",
           test: /node_modules\//,
           minChunks: 5,
           priority: 10,
@@ -102,7 +105,7 @@ const config = {
   plugins: [],
 };
 
-const pages = getEntries('./src/pages/', 'html');
+const pages = getEntries("./src/pages/", "html");
 
 for (const pathname in pages) {
   // Configured to generate the html file, define paths, etc.
@@ -110,9 +113,9 @@ for (const pathname in pages) {
     filename: `${pathname}.html`, // html output pathname
     template: path.resolve(__dirname, `.${pages[pathname]}`), // Template path
     inject: true,
-    favicon: path.resolve(__dirname, '../src/assets/favicon.ico'),
-    chunks: ['commons', 'vendors', 'app', pathname],
-    chunksSortMode: 'manual',
+    favicon: path.resolve(__dirname, "../src/assets/favicon.ico"),
+    chunks: ["commons", "vendors", "app", pathname],
+    chunksSortMode: "manual",
   };
   config.plugins.push(new HtmlWebpackPlugin(conf));
 }
